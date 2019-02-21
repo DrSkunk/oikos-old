@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import createHistory from "history/createBrowserHistory";
-import Home from './components/home'
-import Game from './components/game';
-import PageNotFound from './components/PageNotFound'
+import Home from "./components/home";
+import Game from "./components/game";
+import PageNotFound from "./components/PageNotFound";
 
 const styles = theme => ({
   root: {
@@ -15,7 +15,6 @@ const styles = theme => ({
 const history = createHistory();
 
 class App extends Component {
-
   render() {
     const { classes } = this.props;
     return (
@@ -29,9 +28,6 @@ class App extends Component {
               <Redirect to="/404" />
             </Switch>
           </div>
-          {/* <div className={classes.navBar}>
-              <NavBar />
-            </div> */}
         </div>
       </Router>
     );
