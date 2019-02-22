@@ -1,23 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import Simple from "./Simple";
 
 const styles = theme => ({
   root: {
-    display: "grid",
-    marginLeft: "25vw",
-    gridTemplateColumns: "10vw 10vw 10vw 10vw 10vw",
-    gridTemplateRows: "10vw 10vw 10vw 10vw 10vw"
-  }, cell: {
+    display: "grid"
+    // marginLeft: "25vw",
+    // gridTemplateColumns: "10vw 10vw 10vw 10vw 10vw",
+    // gridTemplateRows: "10vw 10vw 10vw 10vw 10vw"
+  },
+  cell: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#d2def2",
-    '&:hover': {
-      backgroundColor: "#ccc",
+    "&:hover": {
+      backgroundColor: "#ccc"
     }
   }
 });
-
 
 class Board extends Component {
   render() {
@@ -27,18 +28,29 @@ class Board extends Component {
     const boardGrid = players.map((player, index) => {
       const roof = roofs[index];
       const tower = towers[index];
-      return <div
-        key={`boardgrid_cell_${index}`}
-        className={classes.cell}
-        onClick={() => { onTileClick(index) }}
-      >
-        player {player}<br />
-        roof {roof}<br />
-        tower {tower}
-      </div>
-    })
+      return (
+        <div
+          key={`boardgrid_cell_${index}`}
+          className={classes.cell}
+          onClick={() => {
+            onTileClick(index);
+          }}
+        >
+          player {player}
+          <br />
+          roof {roof}
+          <br />
+          tower {tower}
+        </div>
+      );
+    });
 
-    return <div className={classes.root}>{boardGrid}</div>
+    return (
+      <div className={classes.root}>
+        <Simple />
+        {/* {boardGrid} */}
+      </div>
+    );
   }
 }
 

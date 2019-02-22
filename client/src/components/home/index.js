@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+import { Button } from "@material-ui/core";
 import firebase from "../../util/firebase";
 import Loading from "../../atoms/Loading";
 import SetUsername from "./SetUsername";
 import { getUsername } from "../../util";
-import { Button } from "@material-ui/core";
 
 const styles = theme => ({
   root: {}
@@ -34,6 +34,10 @@ class Home extends Component {
         username: getUsername()
       });
     });
+  }
+
+  componentWillUnmount() {
+    this.firebaseRef.off();
   }
 
   listGames() {
@@ -83,8 +87,10 @@ class Home extends Component {
       <div className={classes.root}>
         {username ? (
           <span>
-            Hello {username}{" "}
-            <Button onClick={this.changeUsername}>Change username</Button>
+            Hello {username}
+            <Button variant="contained" onClick={this.changeUsername}>
+              Change username
+            </Button>
           </span>
         ) : (
           <SetUsername callback={this.updateUsername} />
