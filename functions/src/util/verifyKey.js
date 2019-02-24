@@ -6,11 +6,12 @@ export default async function checkKey(req) {
   if (!key) {
     throw new Error("No key provided");
   }
-  const snapshot = await admin
+  const val = (await admin
     .database()
     .ref("/keys")
-    .once("value");
-  if (!Object.values(snapshot.val()).includes(key)) {
+    .once("value")).val();
+  const validKeys = Object.keys(val).map(item => val[item]);
+  if (!validKeys.includes(key)) {
     throw new Error("Invalid key");
   }
   return true;

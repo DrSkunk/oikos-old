@@ -18,8 +18,8 @@ export function setUsername(username) {
   return true;
 }
 
-const baseUrl = "http://localhost:5000/oikos-game/us-central1/";
-// const baseUrl = "https://us-central1-oikos-game.cloudfunctions.net/";
+// const baseUrl = "http://localhost:5000/oikos-game/us-central1/";
+const baseUrl = "https://us-central1-oikos-game.cloudfunctions.net/";
 
 export function joinGame(username, gameId) {
   return fetch(`${baseUrl}joinGame?username=${username}&gameId=${gameId}`);

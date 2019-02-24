@@ -15,9 +15,7 @@ export default https.onRequest(async (req, res) => {
       if (gameState === null) {
         throw new Error("Invalid gameId");
       }
-      const { players: playersObject } = gameState;
-
-      const players = Object.values(playersObject);
+      const { players } = gameState;
 
       if (!players.includes(username)) {
         throw new Error("Player is not in game");
@@ -48,6 +46,7 @@ export default https.onRequest(async (req, res) => {
 
       return res.sendStatus(200);
     } catch (error) {
+      console.error(error);
       return res.status(500).send(error.toString());
     }
   });

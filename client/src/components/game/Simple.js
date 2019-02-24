@@ -5,11 +5,19 @@ import ColladaLoader from "three-collada-loader-2";
 import OrbitControls from "three-orbitcontrols";
 import water from "../../assets/water.png";
 import lvl1 from "../../assets/towers/lvl1.dae";
+import skyboxBack from "../../assets/skybox/sea_bk.JPG";
+import skyboxDown from "../../assets/skybox/sea_dn.JPG";
+import skyboxFront from "../../assets/skybox/sea_ft.JPG";
+import skyboxLeft from "../../assets/skybox/sea_lf.JPG";
+import skyboxRight from "../../assets/skybox/sea_rt.JPG";
+import skyboxUp from "../../assets/skybox/sea_up.JPG";
 
 OBJLoader(THREE);
 
 class Simple extends Component {
   componentDidMount() {
+    window.addEventListener("resize", this.handleResize, false);
+
     this.THREE = THREE;
     const width = this.mount.clientWidth;
     const height = this.mount.clientHeight;
@@ -58,14 +66,14 @@ class Simple extends Component {
 
     //ADD CUBE
     const cubeGeometry = new THREE.BoxGeometry(1, 2, 1);
-    const cubeMaterial = new THREE.MeshBasicMaterial({ color: "#433F81" });
+    const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
     this.cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     this.cube.position.y = 1;
     this.scene.add(this.cube);
 
     //ADD ISLAND
     const geometry = new THREE.BoxGeometry(6, 1, 6);
-    const material = new THREE.MeshBasicMaterial({ color: "#8b7834" });
+    const material = new THREE.MeshLambertMaterial({ color: "#8b7834" });
     const island = new THREE.Mesh(geometry, material);
     island.position.y = -0.5;
     island.receiveShadow = true;
@@ -90,9 +98,48 @@ class Simple extends Component {
     seaMesh.receiveShadow = true;
     this.scene.add(seaMesh);
 
+    // Skybox
+    var skyboxCube = new THREE.CubeGeometry(100, 100, 100);
+
+    var cubeMaterials = [
+      // back side
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load(skyboxBack),
+        side: THREE.DoubleSide
+      }),
+      // front side
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load(skyboxFront),
+        side: THREE.DoubleSide
+      }),
+      // Top side
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load(skyboxUp),
+        side: THREE.DoubleSide
+      }),
+      // Bottom side
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load(skyboxDown),
+        side: THREE.DoubleSide
+      }),
+      // right side
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load(skyboxLeft),
+        side: THREE.DoubleSide
+      }),
+      // left side
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load(skyboxRight),
+        side: THREE.DoubleSide
+      })
+    ];
+
+    //add cube & materials
+    var skyboxMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
+    var skybox = new THREE.Mesh(skyboxCube, skyboxMaterial);
+    this.scene.add(skybox);
+
     // load testmodel
-    const houseMaterial = new THREE.MeshBasicMaterial({ color: "#FFFFFF" });
-    houseMaterial.side = THREE.DoubleSide;
     colladaLoader.load(
       lvl1,
       object => {
@@ -134,7 +181,7 @@ class Simple extends Component {
 
     // Mouse to rotate camera
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.maxDistance = 20;
+    this.controls.maxDistance = 40;
     this.controls.minDistance = 1;
     this.controls.enableDamping = true;
     this.controls.enablePan = false;
@@ -144,7 +191,14 @@ class Simple extends Component {
     this.start();
   }
 
+  handleResize = () => {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  };
+
   componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize, false);
     this.stop();
     this.mount.removeChild(this.renderer.domElement);
   }
