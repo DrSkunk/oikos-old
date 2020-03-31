@@ -1,11 +1,12 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import { Button } from "@material-ui/core";
-import firebase from "../../util/firebase";
-import Loading from "../../atoms/Loading";
-import SetUsername from "./SetUsername";
-import { getUsername } from "../../util";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
+import get from 'lodash.get';
+import firebase from '../../util/firebase';
+import Loading from '../../atoms/Loading';
+import SetUsername from './SetUsername';
+import { getUsername } from '../../util';
 
 const styles = theme => ({
   root: {}
@@ -25,8 +26,8 @@ class Home extends Component {
   }
 
   componentWillMount() {
-    this.firebaseRef = firebase.database().ref("games_list");
-    this.firebaseCallback = this.firebaseRef.on("value", snap => {
+    this.firebaseRef = firebase.database().ref('games_list');
+    this.firebaseCallback = this.firebaseRef.on('value', snap => {
       const games = snap.val();
       this.setState({
         games,
@@ -43,7 +44,8 @@ class Home extends Component {
   listGames() {
     const { games } = this.state;
     const gamesList = Object.keys(games).map(id => {
-      const { maxPlayers, players, name } = games[id];
+      const { maxPlayers, name } = games[id];
+      const players = get(games[id], 'players', []);
       const text = `${name} (${players.length}/${maxPlayers})`;
       // if(players.length === maxPlayers) {
       //   return <li key={id}>{text}</li>
@@ -82,7 +84,7 @@ class Home extends Component {
     // if (name === null) {
     //   name
     // }
-    console.log("uesrname", username);
+    console.log('uesrname', username);
     return (
       <div className={classes.root}>
         {username ? (

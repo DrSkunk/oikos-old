@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { Button } from "@material-ui/core";
-import firebase from "../../util/firebase";
-import Loading from "../../atoms/Loading";
-import Board from "./Board";
-import { getUsername, joinGame, leaveGame } from "../../util";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import { Button } from '@material-ui/core';
+import firebase from '../../util/firebase';
+import Loading from '../../atoms/Loading';
+import Board from './Board';
+import { getUsername, joinGame, leaveGame } from '../../util';
 
 const styles = theme => ({
   root: {
-    textAlign: "center"
+    textAlign: 'center'
   }
 });
 
@@ -32,9 +32,9 @@ class Game extends Component {
 
     this.firebaseRef = firebase
       .database()
-      .ref("games")
+      .ref('games')
       .child(gameId);
-    this.firebaseCallback = this.firebaseRef.on("value", snap => {
+    this.firebaseCallback = this.firebaseRef.on('value', snap => {
       const gameState = snap.val();
       this.setState({
         gameId,
@@ -49,7 +49,7 @@ class Game extends Component {
   }
 
   onTileClick(tileIndex) {
-    console.log("clicked on tile", tileIndex);
+    console.log('clicked on tile', tileIndex);
   }
 
   joinGame() {
@@ -59,7 +59,7 @@ class Game extends Component {
     });
     joinGame(username, gameId)
       .then(() => {
-        console.log("success");
+        console.log('success');
         this.setState({
           joinGameLoading: false
         });
@@ -79,7 +79,7 @@ class Game extends Component {
     });
     leaveGame(username, gameId)
       .then(() => {
-        console.log("success");
+        console.log('success');
         this.setState({
           leaveGameLoading: false
         });
@@ -106,16 +106,15 @@ class Game extends Component {
       return <Loading isLoading={isLoading} />;
     }
 
-    const {
-      board,
-      name,
-      players,
-      currentPlayer,
-      maxPlayers,
-      inProgress
-    } = gameState;
-    const playerNames = players.join(", ");
-    const currentPlayerName = players[currentPlayer];
+    const { board, name, currentPlayer, maxPlayers, inProgress } = gameState;
+    let { players } = gameState;
+    let currentPlayerName = 'nobody';
+    if (players === undefined) {
+      players = [];
+    } else {
+      currentPlayerName = players[currentPlayer];
+    }
+    const playerNames = players.join(', ');
 
     const isMyTurn = false;
 

@@ -1,22 +1,23 @@
-import React, { Component } from "react";
-import * as THREE from "three";
-import OBJLoader from "three-obj-loader";
-import ColladaLoader from "three-collada-loader-2";
-import OrbitControls from "three-orbitcontrols";
-import water from "../../assets/water.png";
-import lvl1 from "../../assets/towers/lvl1.dae";
-import skyboxBack from "../../assets/skybox/sea_bk.JPG";
-import skyboxDown from "../../assets/skybox/sea_dn.JPG";
-import skyboxFront from "../../assets/skybox/sea_ft.JPG";
-import skyboxLeft from "../../assets/skybox/sea_lf.JPG";
-import skyboxRight from "../../assets/skybox/sea_rt.JPG";
-import skyboxUp from "../../assets/skybox/sea_up.JPG";
+import React, { Component } from 'react';
+import * as THREE from 'three';
+import OBJLoader from 'three-obj-loader';
+import ColladaLoader from 'three-collada-loader-2';
+import OrbitControls from 'three-orbitcontrols';
+import { Interaction } from 'three.interaction';
+import water from '../../assets/water.png';
+import lvl1 from '../../assets/towers/lvl1.dae';
+import skyboxBack from '../../assets/skybox/sea_bk.JPG';
+import skyboxDown from '../../assets/skybox/sea_dn.JPG';
+import skyboxFront from '../../assets/skybox/sea_ft.JPG';
+import skyboxLeft from '../../assets/skybox/sea_lf.JPG';
+import skyboxRight from '../../assets/skybox/sea_rt.JPG';
+import skyboxUp from '../../assets/skybox/sea_up.JPG';
 
 OBJLoader(THREE);
 
 class Simple extends Component {
   componentDidMount() {
-    window.addEventListener("resize", this.handleResize, false);
+    window.addEventListener('resize', this.handleResize, false);
 
     this.THREE = THREE;
     const width = this.mount.clientWidth;
@@ -28,6 +29,10 @@ class Simple extends Component {
 
     //ADD SCENE
     this.scene = new THREE.Scene();
+
+    //ADD INTERACTION
+    // const interaction = new Interaction(this.render, this.scene, this.camera);
+    // console.log('interaction', interaction);
 
     //ADD CAMERA
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
@@ -60,7 +65,7 @@ class Simple extends Component {
 
     //ADD RENDERER
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    this.renderer.setClearColor("#000000");
+    this.renderer.setClearColor('#000000');
     this.renderer.setSize(width, height);
     this.mount.appendChild(this.renderer.domElement);
 
@@ -69,11 +74,17 @@ class Simple extends Component {
     const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
     this.cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     this.cube.position.y = 1;
+
+    // this.cube.on('click', function(ev) {
+    //   console.log('click', ev);
+    // });
+
     this.scene.add(this.cube);
+    // console.log('interaction', interaction);
 
     //ADD ISLAND
     const geometry = new THREE.BoxGeometry(6, 1, 6);
-    const material = new THREE.MeshLambertMaterial({ color: "#8b7834" });
+    const material = new THREE.MeshLambertMaterial({ color: '#8b7834' });
     const island = new THREE.Mesh(geometry, material);
     island.position.y = -0.5;
     island.receiveShadow = true;
@@ -172,10 +183,10 @@ class Simple extends Component {
         this.scene.add(clone5);
       },
       xhr => {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
       },
       error => {
-        console.error("Error loading model", error);
+        console.error('Error loading model', error);
       }
     );
 
@@ -198,7 +209,7 @@ class Simple extends Component {
   };
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.handleResize, false);
+    window.removeEventListener('resize', this.handleResize, false);
     this.stop();
     this.mount.removeChild(this.renderer.domElement);
   }
@@ -226,14 +237,35 @@ class Simple extends Component {
     this.renderer.render(this.scene, this.camera);
   };
 
+  onDocMouseDown(event, mesh) {
+    const windowArea = event.target.getBoundingClientRect();
+    const mouse3D = new THREE.Vector3(
+      (event.clientX / this.mount.width) * 2 - 1,
+      -(event.clientY / this.mount.height) * 2 + 1,
+      0.5
+    );
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse3D, this.camera);
+    let intersects = raycaster.intersectObjects(mesh);
+    if (intersects.length > 0) {
+      const hexCode = intersects[0].object.material.color.setHex(
+        Math.random() * 0xffffff
+      );
+    }
+  }
+
   render() {
     return (
-      <div
-        style={{ width: "100vw", height: "80vh" }}
-        ref={mount => {
-          this.mount = mount;
-        }}
-      />
+      <div>
+        <div
+          onClick={e => this.onDocMouseDown(e, [this.scene])}
+          id="boardCanvas"
+          style={{ width: '100vw', height: '80vw' }}
+          ref={mount => {
+            this.mount = mount;
+          }}
+        />
+      </div>
     );
   }
 }

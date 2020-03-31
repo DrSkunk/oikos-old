@@ -1,21 +1,22 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Simple from "./Simple";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Simple from './Simple';
+import Shape from './Shape';
 
 const styles = theme => ({
   root: {
-    display: "grid"
+    display: 'grid'
     // marginLeft: "25vw",
     // gridTemplateColumns: "10vw 10vw 10vw 10vw 10vw",
     // gridTemplateRows: "10vw 10vw 10vw 10vw 10vw"
   },
   cell: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#d2def2",
-    "&:hover": {
-      backgroundColor: "#ccc"
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#d2def2',
+    '&:hover': {
+      backgroundColor: '#ccc'
     }
   }
 });
@@ -47,7 +48,8 @@ class Board extends Component {
 
     return (
       <div className={classes.root}>
-        <Simple />
+        {/* <Simple /> */}
+        <Shape />
         {/* {boardGrid} */}
       </div>
     );
